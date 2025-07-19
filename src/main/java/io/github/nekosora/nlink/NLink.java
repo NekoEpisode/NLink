@@ -21,6 +21,8 @@ public final class NLink extends JavaPlugin {
 
     private LegacyPaperCommandManager<CommandSender> commandManager;
 
+    private NLinkWebSocketServer webSocketServer;
+
     @Override
     public void onLoad() {
         logger = getLogger();
@@ -29,7 +31,7 @@ public final class NLink extends JavaPlugin {
 
         saveDefaultConfig();
 
-        NLinkWebSocketServer webSocketServer = new NLinkWebSocketServer(new InetSocketAddress(
+        webSocketServer = new NLinkWebSocketServer(new InetSocketAddress(
                 Objects.requireNonNull(getConfig().getString("webSocketAddress")),
                 getConfig().getInt("webSocketPort")
         ));
@@ -58,6 +60,11 @@ public final class NLink extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        try {
+            webSocketServer.stop();
+        } catch (InterruptedException e) {
+            logger.severe("Failed to stop WebSocket server: " + e.getMessage());
+        }
     }
 
     public LegacyPaperCommandManager<CommandSender> getCommandManager() {

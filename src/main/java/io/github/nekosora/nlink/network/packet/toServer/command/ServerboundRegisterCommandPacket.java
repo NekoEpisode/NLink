@@ -33,12 +33,12 @@ public class ServerboundRegisterCommandPacket extends NLinkNetworkPacket {
     public void handle() {
         // Register Command
         if (isReal) {
+            NLinkPlugin plugin = NLinkPluginManager.getInstance().getPlugin(getFrom());
+            String pluginId = plugin != null ? plugin.getId() : null;
             // Register real command (not /nlink commands xxxx)
             NLink.instance.getCommandManager().command(NLink.instance.getCommandManager().commandBuilder(commandName)
                     .handler(ctx -> {
                         UUID request_id = UUID.randomUUID();
-                        NLinkPlugin plugin = NLinkPluginManager.getInstance().getPlugin(getFrom());
-                        String pluginId = plugin != null ? plugin.getId() : null;
                         ClientboundCommandExecutedPacket commandExecutedPacket = new ClientboundCommandExecutedPacket(
                                 "real:" + commandName,
                                 request_id,
@@ -49,6 +49,16 @@ public class ServerboundRegisterCommandPacket extends NLinkNetworkPacket {
                         commandExecutedPacket.sendTo(getFrom());
                     })
             );
+
+            ClientboundGenericAckPacket responsePacket = new ClientboundGenericAckPacket(
+                    "register_command_ack",
+                    0,
+                    "success",
+                    pluginId,
+                    null
+            );
+            responsePacket.addExtraData("command_name", commandName);
+            responsePacket.sendTo(getFrom());
         } else {
             // Register virtual command (/nlink commands xxxx)
             NLinkPlugin plugin = NLinkPluginManager.getInstance().getPlugin(getFrom());

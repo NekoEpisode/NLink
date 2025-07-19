@@ -81,6 +81,6 @@ public class VirtualCommandManager {
 
     // build namespace key
     private String buildNamespacedKey(NLinkPlugin plugin, String cmd) {
-        return plugin.getName().toLowerCase() + ":" + cmd.toLowerCase();
+        return plugin.getId().toLowerCase() + ":" + cmd.toLowerCase();
     }
 }
