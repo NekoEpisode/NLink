@@ -1,0 +1,7 @@
+name: NLink
+version: '1.0-SNAPSHOT'
+main: io.github.nekosora.nlink.NLink
+api-version: '1.21'
+load: STARTUP
+authors: [ NekoSora ]
+description: Bukkit MultiLanguage Protocol
