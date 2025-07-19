@@ -33,8 +33,16 @@ public class ServerboundSendMessagePacket extends NLinkNetworkPacket {
             return;
         }
 
-        UUID uuid = UUID.fromString(targetUUID);
-        Player player = Bukkit.getPlayer(uuid);
+        Player player = null;
+        // 支持UUID或玩家名
+        if (targetUUID.length() == 36 && targetUUID.matches("[0-9a-fA-F\\-]+")) {
+            try {
+                player = Bukkit.getPlayer(UUID.fromString(targetUUID));
+            } catch (Exception ignored) {}
+        }
+        if (player == null) {
+            player = Bukkit.getPlayerExact(targetUUID);
+        }
         NLinkPlugin plugin = NLinkPluginManager.getInstance().getPlugin(getFrom());
         String pluginId = plugin != null ? plugin.getId() : null;
         if (player == null) {

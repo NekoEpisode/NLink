@@ -9,6 +9,7 @@ import io.github.nekosora.nlink.plugin.NLinkPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.java_websocket.WebSocket;
 
 import java.util.UUID;
@@ -16,16 +17,16 @@ import java.util.UUID;
 import static io.github.nekosora.nlink.NLink.logger;
 
 public class ServerboundTeleportEntityPacket extends NLinkNetworkPacket {
-    private final UUID entityUuid;
+    private final String entityUuidStr;
     private final double x;
     private final double y;
     private final double z;
     private final float yaw;
     private final float pitch;
 
-    public ServerboundTeleportEntityPacket(UUID entityUuid, double x, double y, double z, float yaw, float pitch, WebSocket from) {
+    public ServerboundTeleportEntityPacket(String entityUuidStr, double x, double y, double z, float yaw, float pitch, WebSocket from) {
         super(from);
-        this.entityUuid = entityUuid;
+        this.entityUuidStr = entityUuidStr;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -35,10 +36,19 @@ public class ServerboundTeleportEntityPacket extends NLinkNetworkPacket {
 
     @Override
     public void handle() {
-        Bukkit.getScheduler().runTask(NLink.instance, () -> {
-            Entity entity = Bukkit.getEntity(entityUuid);
+        Bukkit.getScheduler().runTask(io.github.nekosora.nlink.NLink.instance, () -> {
+            Entity entity = null;
+            // 支持UUID或玩家名
+            if (entityUuidStr.matches("[0-9a-fA-F\\-]{36}")) {
+                try {
+                    entity = Bukkit.getEntity(UUID.fromString(entityUuidStr));
+                } catch (Exception ignored) {}
+            } else {
+                Player player = Bukkit.getPlayerExact(entityUuidStr);
+                if (player != null) entity = player;
+            }
+            NLinkPlugin plugin = NLinkPluginManager.getInstance().getPlugin(getFrom());
             if (entity == null) {
-                NLinkPlugin plugin = NLinkPluginManager.getInstance().getPlugin(getFrom());
                 if (plugin == null) {
                     logger.warning("Plugin not found on teleport_entity_ack");
                     return;
@@ -47,7 +57,18 @@ public class ServerboundTeleportEntityPacket extends NLinkNetworkPacket {
                 ackPacket.sendTo(getFrom());
                 return;
             }
-            entity.teleportAsync(new Location(entity.getWorld(), x, y, z, yaw, pitch));
+            entity.teleportAsync(new Location(entity.getWorld(), x, y, z, yaw, pitch)).thenRun(() -> {
+                if (plugin != null) {
+                    ClientboundGenericAckPacket ackPacket = new ClientboundGenericAckPacket("teleport_entity_ack", 0, "Teleport success", plugin.getId(), getFrom());
+                    ackPacket.sendTo(getFrom());
+                }
+            }).exceptionally(ex -> {
+                if (plugin != null) {
+                    ClientboundGenericAckPacket ackPacket = new ClientboundGenericAckPacket("teleport_entity_ack", 1, "Teleport failed: " + ex.getMessage(), plugin.getId(), getFrom());
+                    ackPacket.sendTo(getFrom());
+                }
+                return null;
+            });
         });
     }
 
@@ -66,8 +87,8 @@ public class ServerboundTeleportEntityPacket extends NLinkNetworkPacket {
         webSocket.send(toJson());
     }
 
-    public UUID getEntityUuid() {
-        return entityUuid;
+    public String getEntityUuidStr() {
+        return entityUuidStr;
     }
 
     public double getX() {
@@ -91,12 +112,12 @@ public class ServerboundTeleportEntityPacket extends NLinkNetworkPacket {
     }
 
     public static ServerboundTeleportEntityPacket fromJson(JsonObject jsonObject, WebSocket from) {
-        UUID entityUuid = UUID.fromString(jsonObject.get("entity_uuid").getAsString());
+        String entityUuidStr = jsonObject.get("entity_uuid").getAsString();
         double x = jsonObject.get("x").getAsDouble();
         double y = jsonObject.get("y").getAsDouble();
         double z = jsonObject.get("z").getAsDouble();
         float yaw = jsonObject.get("yaw").getAsFloat();
         float pitch = jsonObject.get("pitch").getAsFloat();
-        return new ServerboundTeleportEntityPacket(entityUuid, x, y, z, yaw, pitch, from);
+        return new ServerboundTeleportEntityPacket(entityUuidStr, x, y, z, yaw, pitch, from);
     }
 }

@@ -68,6 +68,16 @@ public class VirtualCommandManager {
     }
 
     /**
+     * 注销插件所有命令
+     * @param plugin 插件实例
+     */
+    public void unregisterAllCommand(@NotNull NLinkPlugin plugin) {
+        commandMap.entrySet().stream()
+                .filter(entry -> entry.getKey().startsWith(plugin.getId().toLowerCase() + ":"))
+                .forEach(entry -> commandMap.remove(entry.getKey()));
+    }
+
+    /**
      * 查找命令（供命令调度器调用）
      */
     public NLinkVirtualCommand getCommand(String namespacedCommand) {

@@ -1,0 +1,144 @@
+NLink（NL）协议数据包文档（2024修正版，完全对应当前实现）
+
+============================
+1. 登录与认证 (不安全，待改进)
+----------------------------
+客户端 → 服务端：
+{
+  "packet_id": "login",
+  "hashedPassword": "sha256后的密码"
+}
+服务端 → 客户端：
+{
+  "status": "success" | "error",
+  // 若失败有 "error": "原因"
+}
+
+============================
+2. 插件管理
+----------------------------
+注册插件：
+{
+  "packet_id": "create_plugin",
+  "plugin_id": "your_plugin_id",
+  "name": "插件名",
+  "version": "1.0.0",
+  "author": "作者",
+  "description": "描述"
+}
+卸载插件：
+{
+  "packet_id": "unload_plugin",
+  "plugin_id": "your_plugin_id" // 可选，缺省为当前连接的插件
+}
+
+============================
+3. 命令系统
+----------------------------
+注册命令：
+{
+  "packet_id": "register_command",
+  "command_name": "tpa",
+  "permission": "nlink.tpa",
+  "is_real": false
+}
+
+命令执行（服务端→客户端）：
+{
+  "packet_id": "command_executed",
+  "command_namespace": "your_plugin_id:command",
+  "request_id": "uuid",
+  "command_sender": {
+    "name": "玩家名",
+    "uuid": "玩家UUID"|"console",
+    "is_player": true|false,
+    // 若为玩家，附带：
+    "x": 100, "y": 64, "z": 100, "yaw": 0, "pitch": 0,
+    "world": "world",
+    "game_mode": "CREATIVE",
+    "is_op": true,
+    "is_flying": false,
+    "is_sneaking": false,
+    "is_sprinting": false
+  },
+  "plugin_id": "your_plugin_id",
+  "args": ["参数1", "参数2", ...]
+}
+
+============================
+4. 消息与交互
+----------------------------
+发送消息：
+{
+  "packet_id": "send_message",
+  "target": "玩家UUID|玩家名|console",
+  "message": "内容"
+}
+
+============================
+5. 实体与世界操作
+----------------------------
+传送实体：
+{
+  "packet_id": "teleport_entity",
+  "entity_uuid": "UUID", // 推荐
+  "player_name": "玩家名", // 可选，优先用UUID
+  "x": 100, "y": 64, "z": 100, "yaw": 0, "pitch": 0
+}
+
+============================
+6. 玩家信息查询
+----------------------------
+按玩家名查询：
+{
+  "packet_id": "query_player_information_with_player_name",
+  "player_name": "玩家名",
+  "query_id": "uuid"
+}
+
+============================
+7. 批量操作
+----------------------------
+批量包：
+{
+  "packet_id": "batch_packet",
+  "packets": [ { ...单个包... }, ... ]
+}
+批量ack：
+{
+  "packet_id": "batch_ack",
+  "acks": [ { ...ack包... }, ... ]
+}
+
+============================
+8. 通用ack包（所有操作均有）
+----------------------------
+{
+  "packet_id": "generic_ack",
+  "request_type": "xxx_ack",
+  "status": 0|1, // 0=成功，1=失败
+  "message": "描述",
+  "plugin_id": "your_plugin_id",
+  // 可选: "data": { ...附加数据... }
+}
+
+============================
+9. 典型流程
+----------------------------
+- 客户端连接WebSocket，发送login。
+- 登录成功后注册插件（create_plugin），收到ack后注册命令（register_command）。
+- 玩家执行命令，服务端转发command_executed。
+- 插件处理后可发送send_message、teleport_entity、batch_packet等。
+- 每个操作服务端均返回generic_ack或专用ack。
+- WebSocket断开时，自动卸载插件并注销命令。
+
+============================
+10. 其他说明
+----------------------------
+- 所有包必须有 packet_id 字段。
+- send_message/teleport_entity 支持玩家名或UUID，推荐UUID。
+- 命令namespace为 plugin_id:command。
+- 未登录时除login外所有包都会被拒绝。
+- ack包带plugin_id。
+- 支持批量包和批量ack。
+- 支持玩家信息查询。 

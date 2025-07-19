@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.nekosora.nlink.network.packet.NLinkNetworkPacket;
 import io.github.nekosora.nlink.network.packet.NLinkPacketParser;
+import io.github.nekosora.nlink.network.packet.toServer.api.player.ServerboundQueryPlayerInformationWithPlayerName;
 import io.github.nekosora.nlink.network.packet.toServer.command.ServerboundRegisterCommandPacket;
 import io.github.nekosora.nlink.network.packet.toServer.ServerboundSendMessagePacket;
 import io.github.nekosora.nlink.network.packet.toServer.api.entity.ServerboundTeleportEntityPacket;
@@ -27,6 +28,8 @@ public class NetworkRegistry {
         registerPacket("unload_plugin", ServerboundUnloadPluginPacket::fromJson);
         registerPacket("batch_packet", ServerboundBatchPacket::fromJson);
         registerPacket("teleport_entity", ServerboundTeleportEntityPacket::fromJson);
+        registerPacket("query_player_information_with_player_name", ServerboundQueryPlayerInformationWithPlayerName::fromJson);
+
     }
 
     /** 注册数据包解析器 */
