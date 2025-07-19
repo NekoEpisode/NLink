@@ -4,6 +4,8 @@ import io.github.nekosora.nlink.commands.virtual.VirtualCommandManager;
 import io.github.nekosora.nlink.network.packet.NLinkNetworkPacket;
 import org.java_websocket.WebSocket;
 
+import static io.github.nekosora.nlink.NLink.logger;
+
 public class NLinkPluginImpl implements NLinkPlugin {
     private final WebSocket ws;
     private final String id;
@@ -67,6 +69,7 @@ public class NLinkPluginImpl implements NLinkPlugin {
     @Override
     public void onLoad() {
         loaded = true;
+        logger.info("Enabling plugin " + id + " v" + version + " by " + author + "...");
     }
 
     @Override
@@ -77,12 +80,14 @@ public class NLinkPluginImpl implements NLinkPlugin {
     @Override
     public void onEnable() {
         enabled = true;
+        logger.info("Plugin " + id + " v" + version + " enabled");
     }
 
     @Override
     public void onDisable() {
         enabled = false;
         VirtualCommandManager.getInstance().unregisterAllCommand(this);
+        logger.info("Disabling plugin " + id + " v" + version + "...");
     }
 
     @Override
