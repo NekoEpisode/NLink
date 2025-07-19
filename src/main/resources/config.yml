@@ -1,0 +1,9 @@
+# 这里是NLink配置文件
+# NLink可以让除Java之外的任何语言/客户端通过WebSocket操控Bukkit API
+
+# WebSocket服务开放地址/端口
+webSocketAddress: "0.0.0.0"
+webSocketPort: 8080
+
+# 验证密码(sha-256加密后)
+password: ""

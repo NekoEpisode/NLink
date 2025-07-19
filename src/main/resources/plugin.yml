@@ -5,3 +5,8 @@ api-version: '1.21'
 load: STARTUP
 authors: [ NekoSora ]
 description: Bukkit MultiLanguage Protocol
+
+commands:
+  nlink:
+    description: NLink command
+    aliases: [ "nlk" ]

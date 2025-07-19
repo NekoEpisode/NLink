@@ -1,4 +1,4 @@
-package io.github.nekosora.nlink;
+package io.github.nekosora.nlink.utils;
 
 import com.google.gson.Gson;
 

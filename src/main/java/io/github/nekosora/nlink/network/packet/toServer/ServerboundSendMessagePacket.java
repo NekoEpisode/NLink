@@ -1,9 +1,9 @@
-package io.github.nekosora.nlink.network.packet.toServer.command;
+package io.github.nekosora.nlink.network.packet.toServer;
 
 import com.google.gson.JsonObject;
 import io.github.nekosora.nlink.NLink;
 import io.github.nekosora.nlink.NLinkPluginManager;
-import io.github.nekosora.nlink.Utils;
+import io.github.nekosora.nlink.utils.Utils;
 import io.github.nekosora.nlink.network.packet.NLinkNetworkPacket;
 import io.github.nekosora.nlink.network.packet.toClient.command.ClientboundGenericAckPacket;
 import io.github.nekosora.nlink.plugin.NLinkPlugin;
@@ -35,12 +35,15 @@ public class ServerboundSendMessagePacket extends NLinkNetworkPacket {
 
         UUID uuid = UUID.fromString(targetUUID);
         Player player = Bukkit.getPlayer(uuid);
+        NLinkPlugin plugin = NLinkPluginManager.getInstance().getPlugin(getFrom());
+        String pluginId = plugin != null ? plugin.getId() : null;
         if (player == null) {
             ClientboundGenericAckPacket packet = new ClientboundGenericAckPacket(
                     "send_message_ack",
                     1,
                     "Player(Target) not found",
-                    null
+                    pluginId,
+                    getFrom()
             );
             packet.sendTo(getFrom());
             return;
@@ -52,7 +55,8 @@ public class ServerboundSendMessagePacket extends NLinkNetworkPacket {
                 "send_message_ack",
                 0,
                 "Message sent",
-                null
+                pluginId,
+                getFrom()
         );
         packet.sendTo(getFrom());
     }

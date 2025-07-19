@@ -1,6 +1,6 @@
 package io.github.nekosora.nlink.network.packet.toClient.command;
 
-import io.github.nekosora.nlink.Utils;
+import io.github.nekosora.nlink.utils.Utils;
 import io.github.nekosora.nlink.network.packet.NLinkNetworkPacket;
 import io.github.nekosora.nlink.network.packet.toClient.ClientPacketUtils;
 import org.java_websocket.WebSocket;
@@ -13,12 +13,14 @@ public class ClientboundGenericAckPacket extends NLinkNetworkPacket {
     private final int status;          // status code (0 = success, other = error code)
     private final String message;
     private final Map<String, Object> extraData;
+    private final String pluginId;
 
-    public ClientboundGenericAckPacket(String requestType, int status, String message, WebSocket from) {
+    public ClientboundGenericAckPacket(String requestType, int status, String message, String pluginId, WebSocket from) {
         super(from);
         this.requestType = requestType;
         this.status = status;
         this.message = message;
+        this.pluginId = pluginId;
         this.extraData = new HashMap<>();
     }
 
@@ -38,6 +40,7 @@ public class ClientboundGenericAckPacket extends NLinkNetworkPacket {
         map.put("request_type", requestType);
         map.put("status", status);
         map.put("message", message);
+        map.put("plugin_id", pluginId);
         if (!extraData.isEmpty()) {
             map.put("data", extraData);
         }
@@ -59,4 +62,5 @@ public class ClientboundGenericAckPacket extends NLinkNetworkPacket {
     public int getStatus() { return status; }
     public String getMessage() { return message; }
     public Map<String, Object> getExtraData() { return extraData; }
+    public String getPluginId() { return pluginId; }
 }
