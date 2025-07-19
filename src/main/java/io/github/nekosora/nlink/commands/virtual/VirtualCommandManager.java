@@ -5,6 +5,7 @@ import io.github.nekosora.nlink.plugin.NLinkPlugin;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -46,6 +47,7 @@ public class VirtualCommandManager {
                                 requestId,
                                 sender,
                                 plugin.getId(),
+                                Arrays.stream(args).toList(),
                                 null
                         );
 

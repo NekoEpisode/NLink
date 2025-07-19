@@ -1,4 +1,4 @@
-package io.github.nekosora.nlink.network.packet.toServer.command;
+package io.github.nekosora.nlink.network.packet.toServer.api.command;
 
 import com.google.gson.JsonObject;
 import io.github.nekosora.nlink.NLink;
@@ -31,12 +31,13 @@ public class ServerboundRegisterCommandPacket extends NLinkNetworkPacket {
     public void handle() {
         // Register Command
         if (isReal) {
+            // Real command only can be registered on server not fully loaded.
+            NLinkPlugin plugin = NLinkPluginManager.getInstance().getPlugin(getFrom());
+            String pluginId = plugin != null ? plugin.getId() : null;
             // Register real command (not /nlink commands xxxx)
             NLink.instance.getCommandManager().command(NLink.instance.getCommandManager().commandBuilder(commandName)
                     .handler(ctx -> {
                         UUID request_id = UUID.randomUUID();
-                        NLinkPlugin plugin = NLinkPluginManager.getInstance().getPlugin(getFrom());
-                        String pluginId = plugin != null ? plugin.getId() : null;
                         String[] all = ctx.rawInput().input().split(" ");
                         List<String> args = all.length > 1 ? Arrays.asList(all).subList(1, all.length) : List.of();
                         ClientboundCommandExecutedPacket commandExecutedPacket = new ClientboundCommandExecutedPacket(
@@ -50,6 +51,16 @@ public class ServerboundRegisterCommandPacket extends NLinkNetworkPacket {
                         commandExecutedPacket.sendTo(getFrom());
                     })
             );
+
+            ClientboundGenericAckPacket responsePacket = new ClientboundGenericAckPacket(
+                    "register_command_ack",
+                    0,
+                    "success",
+                    pluginId,
+                    null
+            );
+            responsePacket.addExtraData("command_name", commandName);
+            responsePacket.sendTo(getFrom());
         } else {
             // Register virtual command (/nlink commands xxxx)
             NLinkPlugin plugin = NLinkPluginManager.getInstance().getPlugin(getFrom());

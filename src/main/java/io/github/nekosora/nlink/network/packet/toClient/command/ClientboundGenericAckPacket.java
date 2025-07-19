@@ -2,7 +2,6 @@ package io.github.nekosora.nlink.network.packet.toClient.command;
 
 import io.github.nekosora.nlink.utils.Utils;
 import io.github.nekosora.nlink.network.packet.NLinkNetworkPacket;
-import io.github.nekosora.nlink.network.packet.toClient.ClientPacketUtils;
 import org.java_websocket.WebSocket;
 
 import java.util.HashMap;
@@ -31,7 +30,7 @@ public class ClientboundGenericAckPacket extends NLinkNetworkPacket {
     }
 
     @Override
-    public void handle() { ClientPacketUtils.showHandleClientboundPacketWarning(this); }
+    public void handle() { }
 
     @Override
     public String toJson() {

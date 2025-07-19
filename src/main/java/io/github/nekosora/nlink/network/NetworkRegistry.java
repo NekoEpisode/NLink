@@ -6,6 +6,8 @@ import io.github.nekosora.nlink.network.packet.NLinkNetworkPacket;
 import io.github.nekosora.nlink.network.packet.NLinkPacketParser;
 import io.github.nekosora.nlink.network.packet.toServer.command.ServerboundRegisterCommandPacket;
 import io.github.nekosora.nlink.network.packet.toServer.ServerboundSendMessagePacket;
+import io.github.nekosora.nlink.network.packet.toServer.api.entity.ServerboundTeleportEntityPacket;
+import io.github.nekosora.nlink.network.packet.toServer.ServerboundBatchPacket;
 import io.github.nekosora.nlink.network.packet.toServer.plugin.ServerboundCreatePluginPacket;
 import io.github.nekosora.nlink.network.packet.toServer.plugin.ServerboundUnloadPluginPacket;
 import io.github.nekosora.nlink.network.packet.toServer.login.ServerboundLoginPacket;
@@ -23,6 +25,8 @@ public class NetworkRegistry {
         registerPacket("register_command", ServerboundRegisterCommandPacket::fromJson);
         registerPacket("create_plugin", ServerboundCreatePluginPacket::fromJson);
         registerPacket("unload_plugin", ServerboundUnloadPluginPacket::fromJson);
+        registerPacket("batch_packet", ServerboundBatchPacket::fromJson);
+        registerPacket("teleport_entity", ServerboundTeleportEntityPacket::fromJson);
     }
 
     /** 注册数据包解析器 */
