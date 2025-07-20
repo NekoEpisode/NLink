@@ -39,7 +39,7 @@ public final class NLink extends JavaPlugin {
         if (Objects.requireNonNull(getConfig().getString("password")).isEmpty()) {
             // 生成16位随机密码（字母+数字+符号）
             String password = generateSecurePassword(16);
-            getConfig().set("password", PasswordUtils.sha256(password));
+            getConfig().set("password", password);
             saveConfig();
         }
 
@@ -69,6 +69,10 @@ public final class NLink extends JavaPlugin {
 
     public LegacyPaperCommandManager<CommandSender> getCommandManager() {
         return commandManager;
+    }
+
+    public static NLinkWebSocketServer getWebSocketServer() {
+        return instance.webSocketServer;
     }
 
     private static String generateSecurePassword(int length) {

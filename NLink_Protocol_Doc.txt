@@ -1,18 +1,29 @@
 NLink（NL）协议数据包文档（2024修正版，完全对应当前实现）
 
 ============================
-1. 登录与认证 (不安全，待改进)
+1. 登录与认证 (安全，带challenge防重放)
 ----------------------------
+连接建立后，服务端自动发送challenge：
+{
+  "packet_id": "challenge",
+  "challenge": "base64编码的32字节随机数"
+}
+
 客户端 → 服务端：
 {
   "packet_id": "login",
-  "hashedPassword": "sha256后的密码"
+  "hashedPassword": "sha256(密码+challenge)的结果"
 }
 服务端 → 客户端：
 {
   "status": "success" | "error",
   // 若失败有 "error": "原因"
 }
+
+说明：
+- 客户端收到challenge后，计算 sha256(密码+challenge)
+- 服务端验证 sha256(配置密码+challenge) 是否匹配
+- challenge一次性使用，防止重放攻击
 
 ============================
 2. 插件管理
