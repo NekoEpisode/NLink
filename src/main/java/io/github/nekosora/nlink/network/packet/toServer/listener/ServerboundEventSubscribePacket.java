@@ -10,7 +10,11 @@ import io.github.nekosora.nlink.network.packet.NLinkNetworkPacket;
 import io.github.nekosora.nlink.network.packet.toClient.command.ClientboundGenericAckPacket;
 import io.github.nekosora.nlink.plugin.NLinkPlugin;
 import io.github.nekosora.nlink.utils.CommandSenderUtils;
+import io.github.nekosora.nlink.utils.LocationUtils;
+import io.github.nekosora.nlink.utils.WorldUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
@@ -143,12 +147,15 @@ public class ServerboundEventSubscribePacket extends NLinkNetworkPacket {
 
     private void addPropertyToJson(JsonObject json, String name, Object value) {
         switch (value) {
-            case null -> {
-            }
+            case null -> {} // 忽略null
             case Number number -> json.addProperty(name, number);
             case Boolean b -> json.addProperty(name, b);
             case String s -> json.addProperty(name, s);
             case Character c -> json.addProperty(name, c);
+            case Location location -> json.add(name, LocationUtils.convertLocationToJson(location));
+            case World world -> json.add(name, WorldUtils.convertWorldToJson(world));
+            case CommandSender sender -> json.add(name, CommandSenderUtils.convertCommandSenderOrPlayerToJson(sender));
+            // 未来可在此添加更多类型的序列化
             default -> json.addProperty(name, value.toString());
         }
     }
