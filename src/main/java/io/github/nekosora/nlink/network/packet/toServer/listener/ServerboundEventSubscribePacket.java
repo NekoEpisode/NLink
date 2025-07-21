@@ -2,6 +2,7 @@ package io.github.nekosora.nlink.network.packet.toServer.listener;
 
 import com.google.gson.JsonObject;
 import io.github.nekosora.nlink.NLink;
+import io.github.nekosora.nlink.network.packet.toClient.listener.ClientboundEventTriggerPacket;
 import io.github.nekosora.nlink.plugin.NLinkPluginManager;
 import io.github.nekosora.nlink.listener.NLinkListenerManager;
 import io.github.nekosora.nlink.network.packet.NLinkNetworkPacket;
@@ -65,7 +66,7 @@ public class ServerboundEventSubscribePacket extends NLinkNetworkPacket {
             pm.registerEvent(eventClass, listener, EventPriority.NORMAL, (l, event) -> {
                 if (eventClass.isInstance(event)) {
                     JsonObject eventJson = serializeEventToJson(event);
-                    getFrom().send(eventJson.toString());
+                    new ClientboundEventTriggerPacket(eventJson, getFrom()).sendTo(getFrom());
                 }
             }, NLink.instance);
 
