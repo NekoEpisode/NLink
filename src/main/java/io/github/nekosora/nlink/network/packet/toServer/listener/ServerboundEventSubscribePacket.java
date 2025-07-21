@@ -1,5 +1,6 @@
 package io.github.nekosora.nlink.network.packet.toServer.listener;
 
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.google.gson.JsonObject;
 import io.github.nekosora.nlink.NLink;
 import io.github.nekosora.nlink.network.packet.toClient.listener.ClientboundEventTriggerPacket;
@@ -83,7 +84,7 @@ public class ServerboundEventSubscribePacket extends NLinkNetworkPacket {
                     "Listener registered",
                     plugin.getId(),
                     getFrom()
-            );
+            ).addExtraData("listener_id", listenerId);
             ackPacket.sendTo(getFrom());
 
             logger.info("[" + plugin.getId() + "] Registered listener " + listenerId + " for event " + eventClassPath);
