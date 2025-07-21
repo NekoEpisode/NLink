@@ -14,7 +14,7 @@ import java.util.Map;
 import static io.github.nekosora.nlink.NLink.logger;
 import io.github.nekosora.nlink.network.packet.StateManager;
 import io.github.nekosora.nlink.network.packet.toClient.command.ClientboundGenericAckPacket;
-import io.github.nekosora.nlink.NLinkPluginManager;
+import io.github.nekosora.nlink.plugin.NLinkPluginManager;
 import io.github.nekosora.nlink.plugin.NLinkPlugin;
 
 public class NLinkWebSocketServer extends WebSocketServer {

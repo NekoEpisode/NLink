@@ -5,6 +5,7 @@ import io.github.nekosora.nlink.network.NLinkWebSocketServer;
 import io.github.nekosora.nlink.utils.PasswordUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;

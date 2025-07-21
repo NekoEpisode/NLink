@@ -4,10 +4,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.nekosora.nlink.network.packet.NLinkNetworkPacket;
 import io.github.nekosora.nlink.network.packet.NLinkPacketParser;
-import io.github.nekosora.nlink.network.packet.toServer.api.player.ServerboundQueryPlayerInformationWithPlayerName;
+import io.github.nekosora.nlink.network.packet.toServer.listener.ServerboundEventSubscribePacket;
+import io.github.nekosora.nlink.network.packet.toServer.player.ServerboundQueryPlayerInformationPacket;
 import io.github.nekosora.nlink.network.packet.toServer.command.ServerboundRegisterCommandPacket;
-import io.github.nekosora.nlink.network.packet.toServer.ServerboundSendMessagePacket;
-import io.github.nekosora.nlink.network.packet.toServer.api.entity.ServerboundTeleportEntityPacket;
+import io.github.nekosora.nlink.network.packet.toServer.message.ServerboundSendMessagePacket;
+import io.github.nekosora.nlink.network.packet.toServer.entity.ServerboundTeleportEntityPacket;
 import io.github.nekosora.nlink.network.packet.toServer.ServerboundBatchPacket;
 import io.github.nekosora.nlink.network.packet.toServer.plugin.ServerboundCreatePluginPacket;
 import io.github.nekosora.nlink.network.packet.toServer.plugin.ServerboundUnloadPluginPacket;
@@ -28,8 +29,8 @@ public class NetworkRegistry {
         registerPacket("unload_plugin", ServerboundUnloadPluginPacket::fromJson);
         registerPacket("batch_packet", ServerboundBatchPacket::fromJson);
         registerPacket("teleport_entity", ServerboundTeleportEntityPacket::fromJson);
-        registerPacket("query_player_information_with_player_name", ServerboundQueryPlayerInformationWithPlayerName::fromJson);
-
+        registerPacket("query_player_information", ServerboundQueryPlayerInformationPacket::fromJson);
+        registerPacket("event_subscribe", ServerboundEventSubscribePacket::fromJson);
     }
 
     /** 注册数据包解析器 */

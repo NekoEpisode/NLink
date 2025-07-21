@@ -1,7 +1,7 @@
 package io.github.nekosora.nlink.network.packet.toServer.plugin;
 
 import com.google.gson.JsonObject;
-import io.github.nekosora.nlink.NLinkPluginManager;
+import io.github.nekosora.nlink.plugin.NLinkPluginManager;
 import io.github.nekosora.nlink.network.packet.NLinkNetworkPacket;
 import io.github.nekosora.nlink.network.packet.toClient.command.ClientboundGenericAckPacket;
 import io.github.nekosora.nlink.plugin.NLinkPlugin;

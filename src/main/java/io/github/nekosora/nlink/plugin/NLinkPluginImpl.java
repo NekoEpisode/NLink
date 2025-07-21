@@ -1,6 +1,7 @@
 package io.github.nekosora.nlink.plugin;
 
 import io.github.nekosora.nlink.commands.virtual.VirtualCommandManager;
+import io.github.nekosora.nlink.listener.NLinkListenerManager;
 import io.github.nekosora.nlink.network.packet.NLinkNetworkPacket;
 import org.java_websocket.WebSocket;
 
@@ -87,6 +88,7 @@ public class NLinkPluginImpl implements NLinkPlugin {
     public void onDisable() {
         enabled = false;
         VirtualCommandManager.getInstance().unregisterAllCommand(this);
+        NLinkListenerManager.getInstance().unregisterAllListeners(this);
         logger.info("Disabling plugin " + id + " v" + version + "...");
     }
 

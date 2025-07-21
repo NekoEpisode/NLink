@@ -1,6 +1,5 @@
-package io.github.nekosora.nlink;
+package io.github.nekosora.nlink.plugin;
 
-import io.github.nekosora.nlink.plugin.NLinkPlugin;
 import org.java_websocket.WebSocket;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,6 +1,6 @@
 package io.github.nekosora.nlink.commands;
 
-import io.github.nekosora.nlink.NLinkPluginManager;
+import io.github.nekosora.nlink.plugin.NLinkPluginManager;
 import io.github.nekosora.nlink.commands.virtual.NLinkVirtualCommand;
 import io.github.nekosora.nlink.commands.virtual.VirtualCommandManager;
 import io.github.nekosora.nlink.plugin.NLinkPlugin;

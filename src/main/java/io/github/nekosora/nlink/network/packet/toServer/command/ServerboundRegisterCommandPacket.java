@@ -2,7 +2,7 @@ package io.github.nekosora.nlink.network.packet.toServer.command;
 
 import com.google.gson.JsonObject;
 import io.github.nekosora.nlink.NLink;
-import io.github.nekosora.nlink.NLinkPluginManager;
+import io.github.nekosora.nlink.plugin.NLinkPluginManager;
 import io.github.nekosora.nlink.utils.Utils;
 import io.github.nekosora.nlink.commands.virtual.VirtualCommandManager;
 import io.github.nekosora.nlink.network.packet.NLinkNetworkPacket;
@@ -48,6 +48,7 @@ public class ServerboundRegisterCommandPacket extends NLinkNetworkPacket {
                                 null // set null, because it's server send, no from.
                         );
                         commandExecutedPacket.sendTo(getFrom());
+                        logger.info("[" + pluginId + "] Real command registered: " + commandName);
                     })
             );
         } else {
@@ -65,7 +66,7 @@ public class ServerboundRegisterCommandPacket extends NLinkNetworkPacket {
                     );
                     responsePacket.addExtraData("command_name", commandName);
                     responsePacket.sendTo(getFrom());
-                    logger.info("Virtual command registered: " + commandName);
+                    logger.info("[" + pluginId + "] Virtual command registered: " + commandName);
                 } else {
                     ClientboundGenericAckPacket responsePacket = new ClientboundGenericAckPacket(
                             commandName,
